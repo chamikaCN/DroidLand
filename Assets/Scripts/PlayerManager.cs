@@ -21,7 +21,7 @@ public class PlayerManager : MonoBehaviour
     Camera cam;
     public LayerMask groundMask;
     Droid currentDroid;
-    public Joystick joystick;
+    public Joystick moveJoystick, cameraJoystick;
     Rigidbody player;
 
     void Start()
@@ -34,6 +34,11 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         PlayerMovement();
+
+        
+            CameraMovement();
+
+        
         // if (Input.GetMouseButtonDown(0))
         // {
         //     Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -66,9 +71,17 @@ public class PlayerManager : MonoBehaviour
     }
 
     void PlayerMovement(){
-        Vector3 movement = new Vector3(joystick.Horizontal,0,joystick.Vertical);
-        Debug.Log(movement);
-        player.velocity = movement;
+        Vector3 movement = new Vector3(-moveJoystick.Vertical,0,moveJoystick.Horizontal);
+        player.velocity = movement*Time.deltaTime*50f;
+    }
+
+    void CameraMovement()
+    {
+        //take user touch controls and provide movement;
+        float hor = cameraJoystick.Horizontal, ver = cameraJoystick.Vertical;
+        if (Mathf.Abs(ver * hor) > 0) {
+            CameraController.instance.CalculateCameraMovement(hor, ver);
+        }
     }
 }
 
