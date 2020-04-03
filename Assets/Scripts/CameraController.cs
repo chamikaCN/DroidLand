@@ -21,23 +21,25 @@ public class CameraController : MonoBehaviour
     public Transform target;
     public Vector3 offset;
 
-    [Range(0.0f, 10.0f)]
+    [Range(0.0f, 100.0f)]
     public float maxZoom, minZoom, zoomSpeed, yawSpeed, updownSpeed;
     
-    float currrentZoom = 10f, currentYaw = 1f, pitch = 2f, currentUpdown = 1f;
+    float currrentZoom, currentYaw, pitch, currentUpdown;
+
+    void Start(){
+        currrentZoom = 10f; 
+        currentYaw = 1f; 
+        pitch = 2f; 
+        currentUpdown = 1f;
+    }
 
     void Update()
     {
         //currrentZoom -= Input.GetAxis("Mouse ScrollWheel")*zoomSpeed;
         //currrentZoom = Mathf.Clamp(currrentZoom, minZoom, maxZoom);
 
-        currentUpdown -= Input.GetAxis("Vertical") * updownSpeed * Time.deltaTime;
-        currentYaw -= Input.GetAxis("Horizontal") * yawSpeed * Time.deltaTime;
+        //CalculateCameraMovement(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            Debug.Log(currentUpdown);
-        }
     }
     void LateUpdate()
     {
@@ -53,4 +55,10 @@ public class CameraController : MonoBehaviour
         target = transform;
 
     }
+
+    public void CalculateCameraMovement(float horizontal, float vertical){
+        currentYaw -= horizontal * yawSpeed * Time.deltaTime;
+        currentUpdown -= vertical * updownSpeed * Time.deltaTime;
+    }
+
 }
