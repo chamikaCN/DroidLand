@@ -55,7 +55,7 @@ public class GameSceneManager : MonoBehaviour
 
     }
 
-    void ChangeDroid()
+    public void ChangeDroid()
     {
         currentDroid.ResetPlayerControl();
         PlayerManager.instance.removeCurrentDroid();
@@ -70,4 +70,5 @@ public class GameSceneManager : MonoBehaviour
     {
         return currentDroid;
     }
+
 }
