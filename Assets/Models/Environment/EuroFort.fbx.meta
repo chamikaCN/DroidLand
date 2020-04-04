@@ -3,7 +3,27 @@ guid: 612300e3ad98d104097959d8acb75f07
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: EuroWall
+    second: {fileID: 2100000, guid: 942da8f31b84dcf4c8d9da1023b9dbbf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: EurowallLight
+    second: {fileID: 2100000, guid: 54de03a26a0068543a364ac6bc9cc180, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RoofBrown
+    second: {fileID: 2100000, guid: caacfbc9c87c259468561a311f1261e9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WoodBrown
+    second: {fileID: 2100000, guid: c06c21ed61228c54cb47ccd8bfecc7f0, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

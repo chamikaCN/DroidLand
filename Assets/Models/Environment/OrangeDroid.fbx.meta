@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 844452f520d29264bb0f746efd96c033
+guid: 217aba8004a20234c8ac22f9d685f227
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
@@ -7,8 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: SandStone
-    second: {fileID: 2100000, guid: 76f7cee874e61f4448f263929307fb20, type: 2}
+      name: Body
+    second: {fileID: 2100000, guid: a5731745d39208e48b14588d76b24ff5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dark
+    second: {fileID: 2100000, guid: 9bde1f160ee839e4c817ff47f60bc61f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Eyeballs
+    second: {fileID: 2100000, guid: 7f60d219349101145817cbaddd7e8611, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

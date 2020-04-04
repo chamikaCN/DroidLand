@@ -3,7 +3,32 @@ guid: 13c5d5cabeca0944abf205695be0af51
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArabWall
+    second: {fileID: 2100000, guid: d15d3d709a59a99429b2590f1faeafb9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArabWallDark
+    second: {fileID: 2100000, guid: d1d3dfc27b1fe7b4eb12330f4efbf233, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BrickBrown
+    second: {fileID: 2100000, guid: 88363a49a1a6ec44ea74c55928aec08c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Copper
+    second: {fileID: 2100000, guid: 31ff2db1bddea8d4f88bf41c5dfcfead, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WoodBrown
+    second: {fileID: 2100000, guid: 7a3731f876868194ba7d6ea28a15181f, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
