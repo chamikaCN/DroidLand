@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -22,41 +23,18 @@ public class PlayerManager : MonoBehaviour
     public LayerMask groundMask;
     Droid currentDroid;
     public Joystick moveJoystick, cameraJoystick;
+    public Slider slider;
     Rigidbody player;
-
+    float sliderValue;
     void Start()
     {
         cam = Camera.main;
-        
-        //currentDroid = GameSceneManager.instance.getCurrentDroid();
     }
 
     void Update()
     {
         PlayerMovement();
-
-        
-            CameraMovement();
-
-        
-        // if (Input.GetMouseButtonDown(0))
-        // {
-        //     Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        //     RaycastHit hit;
-
-        //     if (Physics.Raycast(ray, out hit, 100, groundMask))
-        //     {
-        //         currentDroid.ManualMovement(hit.point);
-        //     }
-
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     currentDroid.Attack();
-        // }
-
-
+        CameraMovement();
     }
 
     public void setCurrentDroid(Droid droid)
@@ -66,21 +44,30 @@ public class PlayerManager : MonoBehaviour
         player.isKinematic = false;
     }
 
-    public void removeCurrentDroid(){
+    public void removeCurrentDroid()
+    {
         player.isKinematic = true;
     }
 
-    void PlayerMovement(){
-        Vector3 movement = new Vector3(-moveJoystick.Vertical,0,moveJoystick.Horizontal);
-        player.velocity = movement*Time.deltaTime*50f;
+    void PlayerMovement()
+    {
+        Vector3 movement = new Vector3(-moveJoystick.Vertical, 0, moveJoystick.Horizontal);
+        player.velocity = movement * Time.deltaTime * 50f;
     }
 
     void CameraMovement()
     {
-        //take user touch controls and provide movement;
+        sliderValue = 0f;
         float hor = cameraJoystick.Horizontal, ver = cameraJoystick.Vertical;
-        if (Mathf.Abs(ver * hor) > 0) {
+        if (Mathf.Abs(ver * hor) > 0)
+        {
             CameraController.instance.CalculateCameraMovement(hor, ver);
+        }
+
+        if (slider.value != sliderValue)
+        {
+            sliderValue = slider.value;
+            CameraController.instance.CalculateCameraZoom(sliderValue);
         }
     }
 }
