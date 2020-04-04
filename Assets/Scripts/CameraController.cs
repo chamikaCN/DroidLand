@@ -23,27 +23,23 @@ public class CameraController : MonoBehaviour
 
     [Range(0.0f, 100.0f)]
     public float maxZoom, minZoom, zoomSpeed, yawSpeed, updownSpeed;
-    
     float currrentZoom, currentYaw, pitch, currentUpdown;
 
-    void Start(){
-        currrentZoom = 10f; 
-        currentYaw = 1f; 
-        pitch = 2f; 
+
+    void Start()
+    {
+        currrentZoom = 1.5f;
+        currentYaw = 1f;
+        pitch = 2f;
         currentUpdown = 1f;
     }
 
-    void Update()
-    {
-        //currrentZoom -= Input.GetAxis("Mouse ScrollWheel")*zoomSpeed;
-        //currrentZoom = Mathf.Clamp(currrentZoom, minZoom, maxZoom);
-
-        //CalculateCameraMovement(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-
-    }
     void LateUpdate()
     {
-        transform.position = target.position + offset;
+        // float clampedY = Mathf.Clamp(target.position.y + offset.y * currrentZoom, 1.5f, 6f);
+        Vector3 additionVector = target.position + offset * currrentZoom;
+        Mathf.Clamp(additionVector.y, 1.5f, 6f);
+        transform.position = additionVector;
         transform.LookAt(target.position + Vector3.up * pitch);
 
         transform.RotateAround(target.position, Vector3.up, currentYaw);
@@ -56,9 +52,15 @@ public class CameraController : MonoBehaviour
 
     }
 
-    public void CalculateCameraMovement(float horizontal, float vertical){
+    public void CalculateCameraMovement(float horizontal, float vertical)
+    {
         currentYaw -= horizontal * yawSpeed * Time.deltaTime;
         currentUpdown -= vertical * updownSpeed * Time.deltaTime;
+    }
+
+    public void CalculateCameraZoom(float requestZoom)
+    {
+        currrentZoom = requestZoom + 1f;
     }
 
 }
