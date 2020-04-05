@@ -19,14 +19,19 @@ public class GameSceneManager : MonoBehaviour
     }
     #endregion
 
-    String playerTeam = "Orange", enemyTeam = "Blue";
+    List<string> teams;
+    String playerTeam;
     Droid[] droids;
     List<Droid> playerDroids, enemyDroids;
     Droid currentDroid;
     void Start()
     {
+        teams = new List<string>(){"Orange","Blue"};
+        playerTeam = PlayerPrefs.GetString("Team");
+        teams.Remove(playerTeam);
         playerDroids = new List<Droid>();
         enemyDroids = new List<Droid>();
+
         droids = GameObject.FindObjectsOfType<Droid>();
         foreach (Droid droid in droids)
         {
@@ -57,6 +62,7 @@ public class GameSceneManager : MonoBehaviour
 
     public void ChangeDroid()
     {
+        //becuase of using random droid doesnt change on all clicks
         currentDroid.ResetPlayerControl();
         PlayerManager.instance.removeCurrentDroid();
         int rand = UnityEngine.Random.Range(0, playerDroids.Count);
@@ -71,4 +77,8 @@ public class GameSceneManager : MonoBehaviour
         return currentDroid;
     }
 
+    public string getTeam()
+    {
+        return playerTeam;
+    }
 }
