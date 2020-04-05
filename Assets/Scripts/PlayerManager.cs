@@ -35,6 +35,7 @@ public class PlayerManager : MonoBehaviour
     {
         PlayerMovement();
         CameraMovement();
+        PlayerAttack();
     }
 
     public void setCurrentDroid(Droid droid)
@@ -68,6 +69,12 @@ public class PlayerManager : MonoBehaviour
         {
             sliderValue = slider.value;
             CameraController.instance.CalculateCameraZoom(sliderValue);
+        }
+    }
+
+    void PlayerAttack(){
+        if(Input.GetKey(KeyCode.Space)){
+            currentDroid.Attack(currentDroid.getAttackDirection());
         }
     }
 }
