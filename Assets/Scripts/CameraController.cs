@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        currrentZoom = 1.5f;
+        currrentZoom = 1f;
         currentYaw = 1f;
         pitch = 2f;
         currentUpdown = 1f;
