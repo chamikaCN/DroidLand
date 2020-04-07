@@ -12,13 +12,29 @@ public class FireBall : MonoBehaviour
     void Start()
     {
         parent = GetComponentInParent<Droid>();
-        direction = parent.getAttackDirection();
+        direction = parent.getShootDirection();
         team = parent.getTeam();
+        StartCoroutine(DestroyTime());
     }
 
-    
+
     void Update()
     {
-        transform.Translate(direction * speed * Time.deltaTime);
+        transform.Translate(direction * speed * Time.deltaTime, Space.World);
+    }
+
+    IEnumerator DestroyTime()
+    {
+        yield return new WaitForSeconds(2f);
+        Destroy(this.gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Droid" && other.tag != team)
+        {
+            other.GetComponent<Droid>().getDamage();
+            Destroy(this.gameObject);
+        }
     }
 }
