@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameSceneManager : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class GameSceneManager : MonoBehaviour
     Droid currentDroid;
     void Start()
     {
-        teams = new List<string>(){"Orange","Blue"};
+        teams = new List<string>() { "Orange", "Blue" };
         playerTeam = PlayerPrefs.GetString("Team");
         teams.Remove(playerTeam);
         playerDroids = new List<Droid>();
@@ -80,5 +81,41 @@ public class GameSceneManager : MonoBehaviour
     public string getTeam()
     {
         return playerTeam;
+    }
+
+    public void DestroyCheck(Droid droid)
+    {
+        if (droid == GameSceneManager.instance.getCurrentDroid())
+        {
+            foreach (Droid newDroid in enemyDroids)
+            {
+                newDroid.RemoveEnemy(droid);
+            }
+            if (playerDroids.Count > 1)
+            {
+                playerDroids.Remove(currentDroid);
+                GameSceneManager.instance.ChangeDroid();
+            }
+            else
+            {
+                SceneManager.LoadScene("WelcomeScene");
+            }
+        }
+        else if (droid.getTeam() == playerTeam)
+        {
+            playerDroids.Remove(droid);
+            foreach (Droid newDroid1 in enemyDroids)
+            {
+                newDroid1.RemoveEnemy(droid);
+            }
+        }
+        else
+        {
+            enemyDroids.Remove(droid);
+            foreach (Droid newDroid2 in playerDroids)
+            {
+                newDroid2.RemoveEnemy(droid);
+            }
+        }
     }
 }
