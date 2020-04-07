@@ -8,12 +8,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Body
-    second: {fileID: 2100000, guid: a5731745d39208e48b14588d76b24ff5, type: 2}
+    second: {fileID: 2100000, guid: a0c2bd7439a0957488dbde8ea8d8df69, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Dark
-    second: {fileID: 2100000, guid: a0c2bd7439a0957488dbde8ea8d8df69, type: 2}
+    second: {fileID: 2100000, guid: fe24e42b16d9a0146a99f2f8f5a4e167, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
