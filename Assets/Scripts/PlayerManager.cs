@@ -35,7 +35,6 @@ public class PlayerManager : MonoBehaviour
     {
         PlayerMovement();
         CameraMovement();
-        PlayerAttack();
     }
 
     public void setCurrentDroid(Droid droid)
@@ -72,10 +71,15 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void PlayerAttack(){
-        if(Input.GetKey(KeyCode.Space)){
-            currentDroid.Attack(currentDroid.getAttackDirection());
-        }
+    public void PlayerAttack()
+    {
+        currentDroid.Attack(currentDroid.getMovingDirection());
     }
+
+    public void PlayerChange()
+    {
+        GameSceneManager.instance.ChangeDroid();
+    }
+
 }
 
