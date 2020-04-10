@@ -11,9 +11,6 @@ public class FireBall : MonoBehaviour
     public float speed;
     void Start()
     {
-        parent = GetComponentInParent<Droid>();
-        direction = parent.getShootDirection();
-        team = parent.getTeam();
         StartCoroutine(DestroyTime());
     }
 
@@ -36,5 +33,15 @@ public class FireBall : MonoBehaviour
             other.GetComponent<Droid>().getDamage();
             Destroy(this.gameObject);
         }
+    }
+
+    public void setDirection(Vector3 dir)
+    {
+        direction = dir;
+    }
+
+    public void setTeam(string name)
+    {
+        team = name;
     }
 }

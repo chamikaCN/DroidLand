@@ -15,11 +15,13 @@ public class Droid : MonoBehaviour
     string Team;
     Vector3 shootDirection;
     Transform currentEnemyTransform;
+    DroidAnimator animator;
 
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<DroidAnimator>();
 
         Team = this.gameObject.tag.ToString();
         //playerControlled = false;
@@ -105,11 +107,6 @@ public class Droid : MonoBehaviour
             dir = agent.velocity;
         }
         return dir;
-    }
-
-    public Vector3 getShootDirection()
-    {
-        return shootDirection;
     }
 
     public string getTeam()
@@ -204,8 +201,15 @@ public class Droid : MonoBehaviour
         if (!attacked)
         {
             shootDirection = directionVector.normalized;
+            animator.ShootAnim();
+            // if(playerControlled){
+            //     agent.
+            // }
             Vector3 position = new Vector3(transform.position.x, 0.25f, transform.position.z);
-            Instantiate(ball, position, Quaternion.identity, this.transform);
+            GameObject fireball =  Instantiate(ball, position, Quaternion.identity);
+            FireBall fb = fireball.GetComponent<FireBall>();
+            fb.setDirection(shootDirection);
+            fb.setTeam(Team);
             attacked = true;
             StartCoroutine(AttackReset());
         }
