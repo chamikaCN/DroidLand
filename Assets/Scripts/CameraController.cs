@@ -23,7 +23,8 @@ public class CameraController : MonoBehaviour
 
     [Range(0.0f, 100.0f)]
     public float maxZoom, minZoom, zoomSpeed, yawSpeed, updownSpeed;
-    float currrentZoom, currentYaw, pitch, currentUpdown;
+    float currrentZoom, currentYaw, pitch;
+    public float currentUpdown;
 
 
     void Start()
@@ -43,7 +44,9 @@ public class CameraController : MonoBehaviour
         transform.LookAt(target.position + Vector3.up * pitch);
 
         transform.RotateAround(target.position, Vector3.up, currentYaw);
+        currentUpdown =  Mathf.Clamp(currentUpdown, -20f, 10f);
         transform.RotateAround(target.position, transform.right, currentUpdown);
+        
     }
 
     public void setTransform(Transform transform)
