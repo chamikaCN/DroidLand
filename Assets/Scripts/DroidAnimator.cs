@@ -7,17 +7,19 @@ public class DroidAnimator : MonoBehaviour
 {
     Animator playerAnim;
     NavMeshAgent agent;
+    Droid droid;
     void Start()
     {
         playerAnim = GetComponentInChildren<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        droid = GetComponent<Droid>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        float speed = agent.velocity.magnitude / agent.speed;
+        float speed;
+        speed = droid.getMoveAnimValue();
         playerAnim.SetFloat("Move", speed);
     }
 

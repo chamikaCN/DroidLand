@@ -16,6 +16,7 @@ public class Droid : MonoBehaviour
     Vector3 shootDirection;
     Transform currentEnemyTransform;
     DroidAnimator animator;
+    float playerControlSpeed;
 
 
     void Start()
@@ -29,6 +30,7 @@ public class Droid : MonoBehaviour
         health = 3;
         currentEnemyTransform = null;
         attacked = false;
+        playerControlSpeed = 0f;
         detectedEnemies = new List<Transform>();
 
         goals = GameObject.FindGameObjectsWithTag("Goal");
@@ -237,5 +239,20 @@ public class Droid : MonoBehaviour
         attacked = false;
     }
 
+    public float getMoveAnimValue(){
+
+        float speed = 0f;
+        if (!playerControlled)
+        {
+            speed = agent.velocity.magnitude / agent.speed;
+        }else{
+            speed = playerControlSpeed;
+        }
+        return speed;
+    }
+
+    public void setPlayerControlSpeed(float sp){
+        playerControlSpeed = sp;
+    }
 }
 
