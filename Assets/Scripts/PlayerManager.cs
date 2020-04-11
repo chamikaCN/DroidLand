@@ -25,10 +25,12 @@ public class PlayerManager : MonoBehaviour
     public Joystick moveJoystick, cameraJoystick;
     public Slider slider;
     Rigidbody player;
-    float sliderValue;
+    float sliderValue, speed;
+    Vector3 faceDirection;
     void Start()
     {
         cam = Camera.main;
+        faceDirection = Vector3.forward;
     }
 
     void Update()
@@ -51,8 +53,18 @@ public class PlayerManager : MonoBehaviour
 
     void PlayerMovement()
     {
-        Vector3 movement = new Vector3(-moveJoystick.Vertical, 0, moveJoystick.Horizontal);
-        player.velocity = movement * Time.deltaTime * 50f;
+        Vector3 movement = new Vector3(moveJoystick.Horizontal, 0, moveJoystick.Vertical);
+        movement = cam.transform.TransformDirection(movement);
+        Vector3 moveDirection = movement;
+        moveDirection.y = 0;
+        moveDirection = moveDirection.normalized * movement.magnitude;
+        player.velocity = moveDirection * Time.deltaTime * 75f;
+        if (player.velocity.magnitude > 0)
+        {
+            faceDirection = player.velocity;
+        }
+        player.transform.rotation = Quaternion.LookRotation(faceDirection, transform.up);
+        currentDroid.setPlayerControlSpeed(player.velocity.magnitude);
     }
 
     void CameraMovement()
