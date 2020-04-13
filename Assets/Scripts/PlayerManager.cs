@@ -22,21 +22,16 @@ public class PlayerManager : MonoBehaviour
     Camera cam;
     public LayerMask groundMask;
     Droid currentDroid;
-    public Joystick moveJoystick, cameraJoystick;
-    public Slider slider;
+    public Joystick moveJoystick;
+    public Button blastButton, guardButton;
     Rigidbody player;
-    float sliderValue, speed;
+    float speed;
     Vector3 faceDirection;
     void Start()
     {
         cam = Camera.main;
         faceDirection = Vector3.forward;
-    }
-
-    void Update()
-    {
-        PlayerMovement();
-        CameraMovement();
+        speed = 75f;
     }
 
     public void setCurrentDroid(Droid droid)
@@ -51,14 +46,13 @@ public class PlayerManager : MonoBehaviour
         player.isKinematic = true;
     }
 
-    void PlayerMovement()
+    public void PlayerMovement(Vector3 movement)
     {
-        Vector3 movement = new Vector3(moveJoystick.Horizontal, 0, moveJoystick.Vertical);
         movement = cam.transform.TransformDirection(movement);
         Vector3 moveDirection = movement;
         moveDirection.y = 0;
         moveDirection = moveDirection.normalized * movement.magnitude;
-        player.velocity = moveDirection * Time.deltaTime * 75f;
+        player.velocity = moveDirection * Time.deltaTime * speed;
         if (player.velocity.magnitude > 0)
         {
             faceDirection = player.velocity;
@@ -67,21 +61,6 @@ public class PlayerManager : MonoBehaviour
         currentDroid.setPlayerControlSpeed(player.velocity.magnitude);
     }
 
-    void CameraMovement()
-    {
-        sliderValue = 0f;
-        float hor = cameraJoystick.Horizontal, ver = cameraJoystick.Vertical;
-        if (Mathf.Abs(ver * hor) > 0)
-        {
-            CameraController.instance.CalculateCameraMovement(hor, ver);
-        }
-
-        if (slider.value != sliderValue)
-        {
-            sliderValue = slider.value;
-            CameraController.instance.CalculateCameraZoom(sliderValue);
-        }
-    }
 
     public void PlayerAttack()
     {
@@ -93,5 +72,18 @@ public class PlayerManager : MonoBehaviour
         GameSceneManager.instance.ChangeDroid();
     }
 
+    public bool PlayerBlast(){
+        return currentDroid.Blast();
+    }
+
+    public bool PlayerGuard(){
+        return currentDroid.ActivateGuard();
+    }
+
+    public void SpeedupDroid(){
+        speed = 120f;
+    }
+
+    
 }
 
