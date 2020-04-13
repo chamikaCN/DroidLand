@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        currrentZoom = 1f;
+        currrentZoom = 1.4f;
         currentYaw = 1f;
         pitch = 2f;
         currentUpdown = 1f;
@@ -57,8 +57,8 @@ public class CameraController : MonoBehaviour
 
     public void CalculateCameraMovement(float horizontal, float vertical)
     {
-        currentYaw -= horizontal * yawSpeed * Time.deltaTime;
-        currentUpdown -= vertical * updownSpeed * Time.deltaTime;
+        currentYaw -= horizontal * yawSpeed * Time.deltaTime*3f;
+        currentUpdown -= vertical * updownSpeed * Time.deltaTime*4f;
     }
 
     public void CalculateCameraZoom(float requestZoom)

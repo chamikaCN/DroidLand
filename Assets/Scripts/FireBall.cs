@@ -9,11 +9,11 @@ public class FireBall : MonoBehaviour
     string team;
     [Range(0f, 10f)]
     public float speed;
+    
     void Start()
     {
         StartCoroutine(DestroyTime());
     }
-
 
     void Update()
     {
@@ -33,6 +33,7 @@ public class FireBall : MonoBehaviour
             other.GetComponent<Droid>().getDamage();
             Destroy(this.gameObject);
         }
+        
     }
 
     public void setDirection(Vector3 dir)
