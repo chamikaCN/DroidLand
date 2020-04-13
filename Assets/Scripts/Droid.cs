@@ -7,10 +7,10 @@ public class Droid : MonoBehaviour
 {
     NavMeshAgent agent;
     GameObject[] goals;
-    GameObject currentGoal;
-    public GameObject ball;
-    bool playerControlled, attacked;
-    int enemiesInRange, health;
+    GameObject currentGoal, guard;
+    public GameObject ball, bomb;
+    bool playerControlled, attacked, blasted, guarded, guardUsed;
+    int enemiesInRange, health, blastTimer;
     List<Transform> detectedEnemies;
     string Team;
     Vector3 shootDirection;
@@ -23,13 +23,19 @@ public class Droid : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<DroidAnimator>();
+        guard = GetComponentInChildren<ProtectionGuard>().gameObject;
+        guard.SetActive(false);
 
         Team = this.gameObject.tag.ToString();
         //playerControlled = false;
         enemiesInRange = 0;
+        blastTimer = 0;
         health = 3;
         currentEnemyTransform = null;
         attacked = false;
+        blasted = false;
+        guarded = false;
+        guardUsed = false;
         playerControlSpeed = 0f;
         detectedEnemies = new List<Transform>();
 
@@ -49,7 +55,14 @@ public class Droid : MonoBehaviour
             {
                 Transform enemyTransform = detectedEnemies[0];
                 AttackEnemyAuto(enemyTransform);
-
+                if (!blasted)
+                {
+                    BlastEnemyAuto();
+                }
+            }
+            if (!guardUsed)
+            {
+                GuardEnemyAuto();
             }
         }
     }
@@ -185,6 +198,56 @@ public class Droid : MonoBehaviour
         Attack(direction);
     }
 
+    void BlastEnemyAuto()
+    {
+        if (blastTimer < 2)
+        {
+            if (enemiesInRange > 2)
+            {
+                Blast();
+            }
+            else
+            {
+                StartCoroutine(BlastCheckTimer());
+            }
+        }
+        else if (blastTimer < 4)
+        {
+            if (enemiesInRange > 1)
+            {
+                Blast();
+            }
+            else
+            {
+                StartCoroutine(BlastCheckTimer());
+            }
+        }
+        else
+        {
+            if (enemiesInRange > 0)
+            {
+                Blast();
+            }
+        }
+    }
+
+    void GuardEnemyAuto()
+    {
+        if (health == 1)
+        {
+            ActivateGuard();
+        }
+        else if (health == 2 && enemiesInRange > 0)
+        {
+            ActivateGuard();
+        }
+        else if (enemiesInRange > 1)
+        {
+            ActivateGuard();
+        }
+
+    }
+
     void OnDrawGizmosSelected()
     {
         if (tag == "Orange")
@@ -204,11 +267,8 @@ public class Droid : MonoBehaviour
         {
             shootDirection = directionVector.normalized;
             animator.ShootAnim();
-            // if(playerControlled){
-            //     agent.
-            // }
             Vector3 position = new Vector3(transform.position.x, 0.25f, transform.position.z);
-            GameObject fireball =  Instantiate(ball, position, Quaternion.identity);
+            GameObject fireball = Instantiate(ball, position, Quaternion.identity);
             FireBall fb = fireball.GetComponent<FireBall>();
             fb.setDirection(shootDirection);
             fb.setTeam(Team);
@@ -217,20 +277,80 @@ public class Droid : MonoBehaviour
         }
     }
 
+    public bool Blast()
+    {
+        if (!blasted)
+        {
+            Instantiate(bomb, transform.position, transform.rotation);
+            Collider[] colliders = Physics.OverlapSphere(transform.position, 1);
+            foreach (Collider col in colliders)
+            {
+                if (col.name == "Droid" && col.tag != Team)
+                {
+                    col.GetComponent<Droid>().getDamage();
+                }
+            }
+            blastTimer = 0;
+            blasted = true;
+            StartCoroutine(BlastReset());
+            return true;
+        }
+        return false;
+    }
+
+    public bool ActivateGuard()
+    {
+        if (!guardUsed)
+        {
+            guard.SetActive(true);
+            guarded = true;
+            guardUsed = true;
+            StartCoroutine(GuardReset());
+            StartCoroutine(GuardTimer());
+            return true;
+        }
+        return false;
+    }
+
     public void getDamage()
     {
-
-        health = health - 1;
-        if (health == 1)
+        if (!guarded)
         {
-            this.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+            health = health - 1;
+            if (health == 1)
+            {
+                this.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                if (playerControlled)
+                {
+                    PlayerManager.instance.SpeedupDroid();
+                }
+                agent.speed = 1.2f;
+            }
+            else if (health == 0)
+            {
+                GameSceneManager.instance.DestroyCheck(this);
+                this.gameObject.SetActive(false);
+            }
         }
-        else if (health == 0)
-        {
-            GameSceneManager.instance.DestroyCheck(this);
-            this.gameObject.SetActive(false);
-        }
+    }
 
+    public float getMoveAnimValue()
+    {
+        float speed = 0f;
+        if (!playerControlled)
+        {
+            speed = agent.velocity.magnitude / agent.speed;
+        }
+        else
+        {
+            speed = playerControlSpeed;
+        }
+        return speed;
+    }
+
+    public void setPlayerControlSpeed(float sp)
+    {
+        playerControlSpeed = sp;
     }
 
     IEnumerator AttackReset()
@@ -239,20 +359,32 @@ public class Droid : MonoBehaviour
         attacked = false;
     }
 
-    public float getMoveAnimValue(){
-
-        float speed = 0f;
-        if (!playerControlled)
-        {
-            speed = agent.velocity.magnitude / agent.speed;
-        }else{
-            speed = playerControlSpeed;
-        }
-        return speed;
+    IEnumerator BlastReset()
+    {
+        yield return new WaitForSeconds(8f);
+        blasted = false;
     }
 
-    public void setPlayerControlSpeed(float sp){
-        playerControlSpeed = sp;
+    IEnumerator BlastCheckTimer()
+    {
+        yield return new WaitForSeconds(2f);
+        blastTimer += 1;
     }
+
+    IEnumerator GuardTimer()
+    {
+        yield return new WaitForSeconds(2f);
+        guarded = false;
+        guard.SetActive(false);
+    }
+
+    IEnumerator GuardReset()
+    {
+        yield return new WaitForSeconds(12f);
+        guardUsed = false;
+    }
+
+
+
 }
 
