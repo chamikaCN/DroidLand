@@ -33,6 +33,8 @@ public class GameSceneManager : MonoBehaviour
         playerDroids = new List<Droid>();
         enemyDroids = new List<Droid>();
 
+        CameraController.instance.changeOffset(playerTeam);
+
         droids = GameObject.FindObjectsOfType<Droid>();
         foreach (Droid droid in droids)
         {
@@ -50,6 +52,7 @@ public class GameSceneManager : MonoBehaviour
         PlayerManager.instance.setCurrentDroid(currentDroid);
         currentDroid.setPlayerControl();
         CameraController.instance.setTransform(currentDroid.transform);
+        currentDroid.DeactivateHealthBar();
     }
 
     void Update()
@@ -64,12 +67,14 @@ public class GameSceneManager : MonoBehaviour
     public void ChangeDroid()
     {
         //becuase of using random droid doesnt change on all clicks
+        currentDroid.ActivateHealthBar();
         currentDroid.ResetPlayerControl();
         PlayerManager.instance.removeCurrentDroid();
         int rand = UnityEngine.Random.Range(0, playerDroids.Count);
         currentDroid = playerDroids[rand];
         PlayerManager.instance.setCurrentDroid(currentDroid);
         currentDroid.setPlayerControl();
+        currentDroid.DeactivateHealthBar();
         CameraController.instance.setTransform(currentDroid.transform);
     }
 
@@ -98,7 +103,7 @@ public class GameSceneManager : MonoBehaviour
             }
             else
             {
-                SceneManager.LoadScene("WelcomeScene");
+                StartCoroutine(RealizationWait("D"));
             }
         }
         else if (droid.getTeam() == playerTeam)
@@ -111,11 +116,34 @@ public class GameSceneManager : MonoBehaviour
         }
         else
         {
-            enemyDroids.Remove(droid);
-            foreach (Droid newDroid2 in playerDroids)
+            if (enemyDroids.Count > 1)
             {
-                newDroid2.RemoveEnemy(droid);
+                enemyDroids.Remove(droid);
+                foreach (Droid newDroid2 in playerDroids)
+                {
+                    newDroid2.RemoveEnemy(droid);
+                }
             }
+            else { StartCoroutine(RealizationWait("V")); }
         }
     }
+
+    public void LoadMenu()
+    {
+        SceneManager.LoadScene("WelcomeScene");
+    }
+
+    IEnumerator RealizationWait(string sign)
+    {
+        yield return new WaitForSeconds(2f);
+        if (sign == "V")
+        {
+            HUDManager.instance.Victory();
+        }
+        else if (sign == "D")
+        {
+            HUDManager.instance.Defeat();
+        }
+    }
+
 }

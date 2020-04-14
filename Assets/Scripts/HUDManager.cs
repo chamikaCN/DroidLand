@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HUDManager : MonoBehaviour
 {
@@ -19,14 +20,17 @@ public class HUDManager : MonoBehaviour
     }
     #endregion
 
-    public GameObject gamePanel, pausePanel;
-    public Button blastButton, guardButton;
+    public GameObject gamePanel, pausePanel, completePanel;
+    public Button blastButton, guardButton, pauseButton, resumeButton, menuButton, quitButton;
     public Slider slider;
     public Joystick moveJoystick, cameraJoystick;
+    public Sprite victorySprite, defeatSprite;
+    public HealthBar healthBar;
 
     void Start()
     {
         pausePanel.SetActive(false);
+        completePanel.SetActive(false);
         gamePanel.SetActive(true);
         slider.value = 0.4f;
     }
@@ -72,7 +76,7 @@ public class HUDManager : MonoBehaviour
         bool blasted = PlayerManager.instance.PlayerBlast();
         if (blasted)
         {
-            blastButton.enabled = false;
+            blastButton.gameObject.SetActive(false);
             StartCoroutine(blastButtonReset());
         }
     }
@@ -82,7 +86,7 @@ public class HUDManager : MonoBehaviour
         bool guardOn = PlayerManager.instance.PlayerGuard();
         if (guardOn)
         {
-            guardButton.enabled = false;
+            guardButton.gameObject.SetActive(false);
             StartCoroutine(guardButtonReset());
         }
     }
@@ -90,13 +94,72 @@ public class HUDManager : MonoBehaviour
     IEnumerator blastButtonReset()
     {
         yield return new WaitForSeconds(8);
-        blastButton.enabled = true;
+        blastButton.gameObject.SetActive(true);
     }
 
     IEnumerator guardButtonReset()
     {
         yield return new WaitForSeconds(15);
-        guardButton.enabled = true;
+        guardButton.gameObject.SetActive(true);
+    }
+
+    public void Pause()
+    {
+        gamePanel.SetActive(false);
+        Time.timeScale = 0;
+        pausePanel.SetActive(true);
+    }
+
+    public void Resume()
+    {
+        pausePanel.SetActive(false);
+        Time.timeScale = 1;
+        gamePanel.SetActive(true);
+    }
+
+    public void LoadMenu()
+    {
+        Time.timeScale = 1;
+        GameSceneManager.instance.LoadMenu();
+    }
+
+    public void Quit()
+    {
+        Time.timeScale = 1;
+        Application.Quit();
+    }
+
+    public void Victory()
+    {
+        displayCompletion(victorySprite, "Victory !!!");
+    }
+
+    public void Defeat()
+    {
+        displayCompletion(defeatSprite, "Defeat !!!");
+    }
+
+    public void displayCompletion(Sprite im, string msg)
+    {
+        completePanel.GetComponent<Image>().sprite = im;
+        completePanel.GetComponentInChildren<TextMeshProUGUI>().text = msg;
+        gamePanel.SetActive(false);
+        completePanel.SetActive(true);
+    }
+
+    public void EndGame()
+    {
+        GameSceneManager.instance.LoadMenu();
+    }
+
+    public void setMaxHealth(int max)
+    {
+        healthBar.setMaxHealth(max);
+    }
+
+    public void setHealth(int health)
+    {
+        healthBar.changeHealth(health);
     }
 
 }

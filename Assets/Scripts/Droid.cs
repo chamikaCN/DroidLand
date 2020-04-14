@@ -10,27 +10,37 @@ public class Droid : MonoBehaviour
     GameObject currentGoal, guard;
     public GameObject ball, bomb;
     bool playerControlled, attacked, blasted, guarded, guardUsed;
-    int enemiesInRange, health, blastTimer;
+    int enemiesInRange, health, blastTimer, maxHealth;
     List<Transform> detectedEnemies;
     string Team;
     Vector3 shootDirection;
     Transform currentEnemyTransform;
     DroidAnimator animator;
     float playerControlSpeed;
+    HealthBar healthBar;
+    Canvas healthCanvas;
 
+    void Awake() {
+        healthCanvas = GetComponentInChildren<Canvas>();
+        healthBar = healthCanvas.gameObject.GetComponentInChildren<HealthBar>();
+    }
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+       
         animator = GetComponent<DroidAnimator>();
         guard = GetComponentInChildren<ProtectionGuard>().gameObject;
         guard.SetActive(false);
+        
+        
 
         Team = this.gameObject.tag.ToString();
         //playerControlled = false;
         enemiesInRange = 0;
         blastTimer = 0;
-        health = 3;
+        maxHealth = 5;
+        health = 5;
         currentEnemyTransform = null;
         attacked = false;
         blasted = false;
@@ -38,6 +48,7 @@ public class Droid : MonoBehaviour
         guardUsed = false;
         playerControlSpeed = 0f;
         detectedEnemies = new List<Transform>();
+        healthBar.setMaxHealth(maxHealth);
 
         goals = GameObject.FindGameObjectsWithTag("Goal");
         RoamToNext();
@@ -317,13 +328,10 @@ public class Droid : MonoBehaviour
         if (!guarded)
         {
             health = health - 1;
+            healthBar.changeHealth(health);
             if (health == 1)
             {
                 this.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                if (playerControlled)
-                {
-                    PlayerManager.instance.SpeedupDroid();
-                }
                 agent.speed = 1.2f;
             }
             else if (health == 0)
@@ -384,6 +392,18 @@ public class Droid : MonoBehaviour
         guardUsed = false;
     }
 
+    public int getHealth()
+    {
+        return health;
+    }
+
+    public void ActivateHealthBar(){
+        healthCanvas.gameObject.SetActive(true);
+    }
+
+    public void DeactivateHealthBar(){
+        healthCanvas.gameObject.SetActive(false);
+    }
 
 
 }

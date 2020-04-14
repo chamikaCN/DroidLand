@@ -34,9 +34,22 @@ public class PlayerManager : MonoBehaviour
         speed = 75f;
     }
 
+    void Update()
+    {
+        DroidHealthControl();
+    }
+
     public void setCurrentDroid(Droid droid)
     {
         currentDroid = droid;
+        if (currentDroid.getHealth() == 1)
+        {
+            speed = 120f;
+        }
+        else
+        {
+            speed = 75f;
+        }
         player = currentDroid.gameObject.GetComponent<Rigidbody>();
         player.isKinematic = false;
     }
@@ -72,18 +85,35 @@ public class PlayerManager : MonoBehaviour
         GameSceneManager.instance.ChangeDroid();
     }
 
-    public bool PlayerBlast(){
+    public bool PlayerBlast()
+    {
         return currentDroid.Blast();
     }
 
-    public bool PlayerGuard(){
+    public bool PlayerGuard()
+    {
         return currentDroid.ActivateGuard();
     }
 
-    public void SpeedupDroid(){
-        speed = 120f;
+    public void DroidHealthControl()
+    {
+        int health = currentDroid.getHealth();
+        HUDManager.instance.setHealth(health);
     }
 
-    
+    public void SpeedupDroid()
+    {
+        int health = currentDroid.getHealth();
+        if (health == 1 && speed < 120f)
+        {
+            speed = 120f;
+        }
+    }
+
+
+
+
+
+
 }
 
