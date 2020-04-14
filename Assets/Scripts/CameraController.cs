@@ -66,4 +66,10 @@ public class CameraController : MonoBehaviour
         currrentZoom = requestZoom + 1f;
     }
 
+    public void changeOffset(string team){
+        if(team == "Blue"){
+            offset = new Vector3(-offset.x, offset.y, offset.z);
+        }
+    }
+
 }
