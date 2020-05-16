@@ -25,6 +25,8 @@ public class GameSceneManager : MonoBehaviour
     Droid[] droids;
     List<Droid> playerDroids, enemyDroids;
     Droid currentDroid;
+    public Color32 orange, blue;
+    Color32 playerColour, enemyColour;
     void Start()
     {
         teams = new List<string>() { "Orange", "Blue" };
@@ -34,6 +36,7 @@ public class GameSceneManager : MonoBehaviour
         enemyDroids = new List<Droid>();
 
         CameraController.instance.changeOffset(playerTeam);
+        setColours(playerTeam);
 
         droids = GameObject.FindObjectsOfType<Droid>();
         foreach (Droid droid in droids)
@@ -52,7 +55,9 @@ public class GameSceneManager : MonoBehaviour
         PlayerManager.instance.setCurrentDroid(currentDroid);
         currentDroid.setPlayerControl();
         CameraController.instance.setTransform(currentDroid.transform);
-        currentDroid.DeactivateHealthBar();
+        currentDroid.IncreaseHealthBar();
+        HUDManager.instance.setPlayerDroids(playerDroids.Count);
+        HUDManager.instance.setEnemyDroids(enemyDroids.Count);
     }
 
     void Update()
@@ -64,17 +69,31 @@ public class GameSceneManager : MonoBehaviour
 
     }
 
+    void setColours(string team)
+    {
+        if (playerTeam == "Orange")
+        {
+            playerColour = orange;
+            enemyColour = blue;
+        }
+        else if (playerTeam == "Blue")
+        {
+            playerColour = blue;
+            enemyColour = orange;
+        }
+    }
+
     public void ChangeDroid()
     {
         //becuase of using random droid doesnt change on all clicks
-        currentDroid.ActivateHealthBar();
+        currentDroid.DecreaseHealthBar();
         currentDroid.ResetPlayerControl();
         PlayerManager.instance.removeCurrentDroid();
         int rand = UnityEngine.Random.Range(0, playerDroids.Count);
         currentDroid = playerDroids[rand];
         PlayerManager.instance.setCurrentDroid(currentDroid);
         currentDroid.setPlayerControl();
-        currentDroid.DeactivateHealthBar();
+        currentDroid.IncreaseHealthBar();
         CameraController.instance.setTransform(currentDroid.transform);
     }
 
@@ -86,6 +105,15 @@ public class GameSceneManager : MonoBehaviour
     public string getTeam()
     {
         return playerTeam;
+    }
+
+    public Color32 getPlayerColour(){
+        return playerColour;
+    }
+
+    public Color32 getEnemyColour()
+    {
+        return enemyColour;
     }
 
     public void DestroyCheck(Droid droid)
@@ -105,6 +133,7 @@ public class GameSceneManager : MonoBehaviour
             {
                 StartCoroutine(RealizationWait("D"));
             }
+            HUDManager.instance.setPlayerDroids(playerDroids.Count);
         }
         else if (droid.getTeam() == playerTeam)
         {
@@ -113,6 +142,7 @@ public class GameSceneManager : MonoBehaviour
             {
                 newDroid1.RemoveEnemy(droid);
             }
+            HUDManager.instance.setPlayerDroids(playerDroids.Count);
         }
         else
         {
@@ -125,6 +155,7 @@ public class GameSceneManager : MonoBehaviour
                 }
             }
             else { StartCoroutine(RealizationWait("V")); }
+            HUDManager.instance.setEnemyDroids(enemyDroids.Count);
         }
     }
 

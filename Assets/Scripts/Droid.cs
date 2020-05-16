@@ -20,20 +20,22 @@ public class Droid : MonoBehaviour
     HealthBar healthBar;
     Canvas healthCanvas;
 
-    void Awake() {
+    void Awake()
+    {
         healthCanvas = GetComponentInChildren<Canvas>();
         healthBar = healthCanvas.gameObject.GetComponentInChildren<HealthBar>();
+
     }
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-       
+
         animator = GetComponent<DroidAnimator>();
         guard = GetComponentInChildren<ProtectionGuard>().gameObject;
         guard.SetActive(false);
-        
-        
+
+
 
         Team = this.gameObject.tag.ToString();
         //playerControlled = false;
@@ -397,11 +399,13 @@ public class Droid : MonoBehaviour
         return health;
     }
 
-    public void ActivateHealthBar(){
+    public void DecreaseHealthBar()
+    {
         healthCanvas.gameObject.SetActive(true);
     }
 
-    public void DeactivateHealthBar(){
+    public void IncreaseHealthBar()
+    {
         healthCanvas.gameObject.SetActive(false);
     }
 
