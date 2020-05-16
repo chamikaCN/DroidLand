@@ -22,8 +22,6 @@ public class PlayerManager : MonoBehaviour
     Camera cam;
     public LayerMask groundMask;
     Droid currentDroid;
-    public Joystick moveJoystick;
-    public Button blastButton, guardButton;
     Rigidbody player;
     float speed;
     Vector3 faceDirection;
