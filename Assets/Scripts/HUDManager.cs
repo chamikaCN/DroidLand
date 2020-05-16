@@ -26,6 +26,10 @@ public class HUDManager : MonoBehaviour
     public Joystick moveJoystick, cameraJoystick;
     public Sprite victorySprite, defeatSprite;
     public HealthBar healthBar;
+    public StatusBar statusBar;
+    public TextMeshProUGUI playerCount, enemyCount;
+    int totalDroids, playerDroids, enemyDroids;
+    Color32 playerCol, enemyCol;
 
     void Start()
     {
@@ -33,6 +37,13 @@ public class HUDManager : MonoBehaviour
         completePanel.SetActive(false);
         gamePanel.SetActive(true);
         slider.value = 0.4f;
+        playerCol = GameSceneManager.instance.getPlayerColour();
+        enemyCol = GameSceneManager.instance.getEnemyColour();
+        // statusBar.setStatusBarColurs(playerCol, enemyCol);
+        //playerCount.faceColor = playerCol;
+        // enemyCount.faceColor = enemyCol;
+
+
     }
 
     void Update()
@@ -160,6 +171,22 @@ public class HUDManager : MonoBehaviour
     public void setHealth(int health)
     {
         healthBar.changeHealth(health);
+    }
+
+    public void setPlayerDroids(int newplayerDroids)
+    {
+        playerDroids = newplayerDroids;
+        playerCount.text = playerDroids.ToString();
+        statusBar.setTotalDroids(playerDroids + enemyDroids);
+        statusBar.changePlayerDroids(playerDroids);
+
+    }
+
+    public void setEnemyDroids(int newEnemyDroids)
+    {
+        enemyDroids = newEnemyDroids;
+        enemyCount.text = enemyDroids.ToString();
+        statusBar.setTotalDroids(playerDroids + enemyDroids);
     }
 
 }
